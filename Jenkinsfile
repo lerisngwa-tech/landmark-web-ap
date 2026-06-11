@@ -57,12 +57,14 @@ pipeline {
             steps {
                 withAWS(credentials: 'aws-creds', region: "${AWS_REGION}") {
                     sh """
+                        curl -LO "https://dl.k8s.io/release/\$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                        chmod +x kubectl
                         aws eks update-kubeconfig --name ${EKS_CLUSTER} --region ${AWS_REGION}
                         sed -i 's/name: landmark/name: develop/g' k8s/namespace.yml
                         sed -i 's/namespace: landmark/namespace: develop/g' k8s/*.yml
                         sed -i "s|image: landmark-technologies:latest|image: ${DOCKER_REPO}:${IMAGE_TAG}|g" k8s/app-deployment.yml
-                        kubectl apply -f k8s/namespace.yml
-                        kubectl apply -f k8s/
+                        ./kubectl apply -f k8s/namespace.yml
+                        ./kubectl apply -f k8s/
                     """
                 }
             }
@@ -72,12 +74,14 @@ pipeline {
             steps {
                 withAWS(credentials: 'aws-creds', region: "${AWS_REGION}") {
                     sh """
+                        curl -LO "https://dl.k8s.io/release/\$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                        chmod +x kubectl
                         aws eks update-kubeconfig --name ${EKS_CLUSTER} --region ${AWS_REGION}
                         sed -i 's/name: landmark/name: staging/g' k8s/namespace.yml
                         sed -i 's/namespace: landmark/namespace: staging/g' k8s/*.yml
                         sed -i "s|image: landmark-technologies:latest|image: ${DOCKER_REPO}:${IMAGE_TAG}|g" k8s/app-deployment.yml
-                        kubectl apply -f k8s/namespace.yml
-                        kubectl apply -f k8s/
+                        ./kubectl apply -f k8s/namespace.yml
+                        ./kubectl apply -f k8s/
                     """
                 }
             }
@@ -93,12 +97,14 @@ pipeline {
             steps {
                 withAWS(credentials: 'aws-creds', region: "${AWS_REGION}") {
                     sh """
+                        curl -LO "https://dl.k8s.io/release/\$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                        chmod +x kubectl
                         aws eks update-kubeconfig --name ${EKS_CLUSTER} --region ${AWS_REGION}
                         sed -i 's/name: landmark/name: production/g' k8s/namespace.yml
                         sed -i 's/namespace: landmark/namespace: production/g' k8s/*.yml
                         sed -i "s|image: landmark-technologies:latest|image: ${DOCKER_REPO}:${IMAGE_TAG}|g" k8s/app-deployment.yml
-                        kubectl apply -f k8s/namespace.yml
-                        kubectl apply -f k8s/
+                        ./kubectl apply -f k8s/namespace.yml
+                        ./kubectl apply -f k8s/
                     """
                 }
             }
