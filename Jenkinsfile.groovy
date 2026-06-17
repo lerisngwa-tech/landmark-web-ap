@@ -8,6 +8,10 @@ pipeline {
         AWS_REGION = 'us-east-1'
         EKS_CLUSTER = 'landmark-eks-cluster'
     }
+    triggers {
+        githubPush()
+        pollSCM('H/5 * * * *')
+    }
     stages {
         stage('Checkout') {
             steps { checkout scm }
